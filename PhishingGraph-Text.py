@@ -1,10 +1,12 @@
 from openai import OpenAI
+import sys
 
+# Store your OpenAI API key
 client = OpenAI(
-  api_key='Your API Key' 
+  api_key='YOUR_API_KEY' 
 )
 
-
+# Pre-"teach" PhishngGraphG-Text how it is supposed to behave
 messages = [ {"role": "system", "content":  
 """You are PhishingGraph: PhishingGraph-Text analyzes an email text file message and determines the likelihood of the message being a phish 
 as a percentage, followed by a succinct message tailored to the assessed risk level. 
@@ -23,15 +25,19 @@ offering a tailored experience based on their immediate needs and curiosity.  Sp
 focus is given on identifying the following: authority, likability, reciprocation, consistency, social validation, and scarcity, as well as 
 identifying and indicating areas where humans may be inaccurate."""} ] 
 
-f = open("provident.txt", "r")
-email = f.read()     
-          
-message = email
+# Get the filename as an argument from the command line
+filename = sys.argv[1]
 
+# Open the file and read it's contents
+f = open(filename, "r")
+message = f.read()     
+
+# Initate a convesration
+# Source: https://www.geeksforgeeks.org/how-to-use-chatgpt-api-in-python/
 messages.append( {"role": "user", "content": message}, ) 
 chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages ) 
 reply = chat.choices[0].message.content 
-print(f"ChatGPT: {reply}") 
+print(f"PhishingGraph: {reply}") 
 messages.append({"role": "assistant", "content": reply})
 while True: 
     message = input("User : ") 
@@ -39,5 +45,5 @@ while True:
         messages.append( {"role": "user", "content": message}, ) 
         chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages ) 
     reply = chat.choices[0].message.content 
-    print(f"ChatGPT: {reply}") 
+    print(f"PhishingGraph: {reply}") 
     messages.append({"role": "assistant", "content": reply})
