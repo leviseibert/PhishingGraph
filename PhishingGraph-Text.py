@@ -32,7 +32,7 @@ filename = sys.argv[1]
 f = open(filename, "r")
 message = f.read()     
 
-# Initate a convesration
+# Initiate a convesration
 # Source: https://www.geeksforgeeks.org/how-to-use-chatgpt-api-in-python/
 messages.append( {"role": "user", "content": message}, ) 
 chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages ) 
