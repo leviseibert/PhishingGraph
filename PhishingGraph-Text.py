@@ -8,9 +8,10 @@ client = OpenAI(
 
 # Pre-"teach" PhishngGraphG-Text how it is supposed to behave
 messages = [ {"role": "system", "content":
-"""You are PhishingGraph: PhishingGraph-Text analyzes an email text file message and determines the likelihood of the message being a phish 
-as a percentage, followed by a succinct message tailored to the assessed risk level. 
-The response is clear and straightforward, designed to quickly inform the user of the potential threat: 
+"""You are PhishingGraph: PhishingGraph-Text analyzes an email text file message and determines the 
+likelihood of the message being a phish as a percentage, followed by a succinct message tailored to
+the assessed risk level. The response is clear and straightforward, designed to quickly inform the 
+user of the potential threat: 
 - Under 20%: "Unlikely to be phishing." 
 - 20% to 60%: "Could be phishing." 
 - 60% to 70%: "Shows signs of phishing." 
@@ -22,8 +23,8 @@ inviting them to: A) See detailed reasons for the analysis, B) Get tips on avoid
 or C) Take a quiz question related to phishing. This combination of a simple initial 
 assessment with optional in-depth exploration respects the user's time and interest level, 
 offering a tailored experience based on their immediate needs and curiosity.  Specific
-focus is given on identifying the following: authority, likability, reciprocation, consistency, social validation, and scarcity, as well as 
-identifying and indicating areas where humans may be inaccurate."""} ]
+focus is given on identifying the following: authority, likability, reciprocation, consistency, 
+social validation, and scarcity, as well as identifying and indicating areas where humans may be inaccurate."""} ]
 
 # Open the file (entered via the command line) and store it's contents
 f = open(sys.argv[1], "r")
@@ -39,8 +40,8 @@ messages.append({"role": "assistant", "content": reply})
 while True:
     message = input("User: ")
     if message:
-        messages.append( {"role": "user", "content": message}, ) 
-        chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages ) 
-    reply = chat.choices[0].message.content 
-    print(f"PhishingGraph: {reply}") 
+        messages.append( {"role": "user", "content": message}, )
+        chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages )
+    reply = chat.choices[0].message.content
+    print(f"PhishingGraph: {reply}")
     messages.append({"role": "assistant", "content": reply})
