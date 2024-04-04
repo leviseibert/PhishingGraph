@@ -3,20 +3,18 @@
 import imaplib
 import email
 from email.header import decode_header
-import webbrowser
-import os
 from openai import OpenAI
 
 # account credentials
-username = "Email Address"
-password = "Email Password"
-imap_server = "Email Server"
+username = "EMAIL_ADDRESS"
+password = "EMAIL_PASSWORD"
+imap_server = "EMAIL_SERVER"
 client = OpenAI(
-  api_key='Your API Key' 
+  api_key='YOUR_API_KEY' 
 )
 
 email_text = ""
-    
+
 # create an IMAP4 class with SSL 
 imap = imaplib.IMAP4_SSL(imap_server)
 # authenticate
@@ -78,7 +76,7 @@ for i in range(total_messages, total_messages-N, -1):
 imap.close()
 imap.logout()
 
-messages = [ {"role": "system", "content":  
+messages = [ {"role": "system", "content":
               """You are PhishingGraph: PhishingGraph-Email analyzes an email message and determines the likelihood of the message being a phish 
 as a percentage, followed by a succinct message tailored to the assessed risk level. 
 The response is clear and straightforward, designed to quickly inform the user of the potential threat: 
@@ -94,24 +92,20 @@ or C) Take a quiz question related to phishing. This combination of a simple ini
 assessment with optional in-depth exploration respects the user's time and interest level, 
 offering a tailored experience based on their immediate needs and curiosity.  Specific
 focus is given on identifying the following: authority, likability, reciprocation, consistency, social validation, and scarcity, as well as 
-identifying and indicating areas where humans may be inaccurate."""} ] 
-              
-#message = """ """
-#messages.append( {"role": "user", "content": message}, ) 
-#chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages )    
-          
+identifying and indicating areas where humans may be inaccurate."""} ]
+
 message = email_text
 
 messages.append( {"role": "user", "content": message}, ) 
 chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages ) 
-reply = chat.choices[0].message.content 
-print(f"ChatGPT: {reply}") 
+reply = chat.choices[0].message.content
+print(f"PhishingGraph-Email: {reply}")
 messages.append({"role": "assistant", "content": reply})
 while True: 
-    message = input("User : ") 
-    if message: 
-        messages.append( {"role": "user", "content": message}, ) 
+    message = input("User: ")
+    if message:
+        messages.append( {"role": "user", "content": message}, )
         chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages ) 
     reply = chat.choices[0].message.content 
-    print(f"ChatGPT: {reply}") 
+    print(f"PhishingGraph-Email: {reply}")
     messages.append({"role": "assistant", "content": reply})
