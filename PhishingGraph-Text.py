@@ -3,7 +3,7 @@ import sys
 
 # Store your OpenAI API key
 client = OpenAI(
-  api_key='YOUR_API_KEY' 
+  api_key='YOUR_OPENAI_API_KEY' 
 )
 
 # Pre-"teach" PhishngGraphG-Text how it is supposed to behave
@@ -25,14 +25,11 @@ offering a tailored experience based on their immediate needs and curiosity.  Sp
 focus is given on identifying the following: authority, likability, reciprocation, consistency, social validation, and scarcity, as well as 
 identifying and indicating areas where humans may be inaccurate."""} ] 
 
-# Get the filename as an argument from the command line
-filename = sys.argv[1]
-
-# Open the file and read it's contents
-f = open(filename, "r")
+# Open the file (entered via the command line) and store it's contents
+f = open(sys.argv[1], "r")
 message = f.read()     
 
-# Initate a convesration
+# Begin the analysis and convesration
 # Source: https://www.geeksforgeeks.org/how-to-use-chatgpt-api-in-python/
 messages.append( {"role": "user", "content": message}, ) 
 chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages ) 
