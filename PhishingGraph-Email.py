@@ -59,10 +59,10 @@ for i in range(total_messages, total_messages-N, -1):
                     # extract content type of email
                     content_type = part.get_content_type()
                     content_disposition = str(part.get("Content-Disposition"))
-                    
+
                     # get the email body
                     body = part.get_payload(decode=True).decode()
-                    
+
                     if content_type == "text/plain" and "attachment" not in content_disposition:
                         email_text = body
             else:
@@ -112,6 +112,6 @@ while True:
     if message:
         messages.append( {"role": "user", "content": message}, )
         chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages )
-    reply = chat.choices[0].message.content 
+    reply = chat.choices[0].message.content
     print(f"PhishingGraph-Email: {reply}")
     messages.append({"role": "assistant", "content": reply})
