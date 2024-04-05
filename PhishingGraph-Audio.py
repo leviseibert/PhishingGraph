@@ -51,4 +51,4 @@ while True:
         chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages )
     reply = chat.choices[0].message.content
     print(f"PhishingGraph-Audio: {reply}")
-    messages.append({"role": "assistant", "content": reply})    
+    messages.append({"role": "assistant", "content": reply})

@@ -18,3 +18,4 @@ PhishingGraph-Text is the simpliest of the the POCs, as it only evalutes simple 
 PhishingGraph-Audio is quite similar to PhishingGraph-Text, with the major difference being it handles audio input (via AssemblyAI's API; see https://www.assemblyai.com/dashboard/signup).  The user will pass the audio as a command line argument when running the script, and the application will transcribe the message and make its evaluation.
 
 ## PhishingGraph-Email
+PhishingGraph-Email is most similar to traditional phishing reporting tools that are often used in organizations to allow users to forward suspicious emails to trained experts who determine the validity of the email.  PhishingGraph-Email emulates this process, however, it does not rely upon any users to provide feedback; the analysis is automatic.  To use this application, one needs to create an email account, and fill in the pertitient values within the code, including the address, password, and IMAP server.
