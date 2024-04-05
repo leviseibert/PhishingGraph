@@ -11,6 +11,8 @@ This project contains three Proof-Of-Concept Applications, each of which utilize
 
 These tools prove how machine learning chatbots can be utilized in helping non-expert users make expert decisions in regard to evaluating phishing threats.
 
+A web-based version that utilizes OpenAI's customizable GPTs has been created, dubbed PhishingGraph-GPT.  Give it a shot at: https://chat.openai.com/g/g-TCf5fg1n4-phishinggraph-gpt 
+
 ## PhishingGraph-Text
 PhishingGraph-Text is the simpliest of the the POCs, as it only evalutes simple text documents.  To utilize this chatbotcopy the text of an email to a .txt file and save in the same directory as PhishingGraph-Text.py.  To execute the application, run "python PhishingGraph-Text.py" from the command line, followed by the name of the text file.
 
