@@ -6,11 +6,11 @@ from email.header import decode_header
 from openai import OpenAI
 
 # account credentials
-username = "EMAIL_ADDRESS"
-password = "EMAIL_PASSWORD"
-imap_server = "EMAIL_SERVER"
+username = YOUR_EMAIL_ADDRESS
+password = YOUR_EMAIL_PASSWORD
+imap_server = YOUR_IMAP_SERVER
 client = OpenAI(
-  api_key='YOUR_API_KEY'
+  api_key=YOUR_OPENAI_API_KEY
 )
 
 # empty string to hold the text of an emial
@@ -23,23 +23,15 @@ imap.login(username, password)
 
 status, email_messages = imap.select("INBOX")
 
-# get the number of emails to be analyzed
-number_of_emails = int(input("How many messages do you want to analyze? "))
-while 5 > number_of_emails <= 0:
-    number_of_emails = int(input("Invalid number!  Please try again: "))
-
-# number of top emails to fetch
-N = number_of_emails
 # total number of emails
 total_messages = int(email_messages[0])
 
-# Get the message
-for i in range(total_messages, total_messages-N, -1):
+# display the selected number of email headings and allow the user to select one
+for i in range(total_messages, total_messages-10, -1):
     # fetch the email message by ID
     res, msg = imap.fetch(str(i), "(RFC822)")
     for response in msg:
         if isinstance(response, tuple):
-            # parse a bytes email into a message object
             msg = email.message_from_bytes(response[1])
             # decode the email subject
             subject, encoding = decode_header(msg["Subject"])[0]
@@ -50,28 +42,53 @@ for i in range(total_messages, total_messages-N, -1):
             From, encoding = decode_header(msg.get("From"))[0]
             if isinstance(From, bytes):
                 From = From.decode(encoding)
-            print("Subject:", subject)
-            print("From:", From)
-            # if the email message is multipart
-            if msg.is_multipart():
-                # iterate over email parts
-                for part in msg.walk():
-                    # extract content type of email
-                    content_type = part.get_content_type()
-                    content_disposition = str(part.get("Content-Disposition"))
+            print(total_messages - i, "Subject:", subject , "From: ", From)
 
+email_number = int(input("Which email do you want to analyze? "))
+while (email_number < 0 or email_number > 9):
+    int(input("Invalid number!  Please try again: "))
+
+selected_email = total_messages - email_number
+# get the message
+#for i in range(total_messages, total_messages-N, -1):
+    # fetch the email message by ID
+res, msg = imap.fetch(str(selected_email), "(RFC822)")
+for response in msg:
+    if isinstance(response, tuple):
+        # parse a bytes email into a message object
+        msg = email.message_from_bytes(response[1])
+        # decode the email subject
+        subject, encoding = decode_header(msg["Subject"])[0]
+        if isinstance(subject, bytes):
+            # if it's a bytes, decode to str
+            subject = subject.decode(encoding)
+            # decode email sender
+        From, encoding = decode_header(msg.get("From"))[0]
+        if isinstance(From, bytes):
+            From = From.decode(encoding)
+        # if the email message is multipart8
+        if msg.is_multipart():
+            # iterate over email parts
+            for part in msg.walk():
+                # extract content type of email
+                content_type = part.get_content_type()
+                content_disposition = str(part.get("Content-Disposition"))
+
+                try:
                     # get the email body
                     body = part.get_payload(decode=True).decode()
+                except:
+                    pass
 
-                    if content_type == "text/plain" and "attachment" not in content_disposition:
-                        email_text = body
-            else:
-                # extract content type of email
-                content_type = msg.get_content_type()
-                # get the email body
-                body = msg.get_payload(decode=True).decode()
-                if content_type == "text/plain":
-                    email_text += body
+                if content_type == "text/plain" and "attachment" not in content_disposition:
+                    email_text = body
+        else:
+            # extract content type of email
+            content_type = msg.get_content_type()
+            # get the email body
+            body = msg.get_payload(decode=True).decode()
+            if content_type == "text/plain":
+                email_text += body
 # close the connection and logout
 imap.close()
 imap.logout()
@@ -105,6 +122,7 @@ message = email_text
 messages.append( {"role": "user", "content": message}, )
 chat = client.chat.completions.create( model="gpt-3.5-turbo", messages=messages )
 reply = chat.choices[0].message.content
+print()
 print(f"PhishingGraph-Email: {reply}")
 messages.append({"role": "assistant", "content": reply})
 while True:
